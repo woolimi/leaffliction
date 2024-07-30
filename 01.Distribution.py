@@ -90,8 +90,7 @@ def main(directory, url):
 
     # Ensure the directory exists
     if not os.path.exists(IMAGE_FOLDER):
-        os.makedirs(IMAGE_FOLDER)
-        download_and_extract_zip(url, IMAGE_FOLDER)
+        download_and_extract_zip(url, './')
     else:
         print("Directory already exists, skip downloading...")
 
