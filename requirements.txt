@@ -1,6 +1,7 @@
 flake8
-zipfile
 matplotlib
-collections
 requests
 argparse
+numpy
+torch
+torchvision

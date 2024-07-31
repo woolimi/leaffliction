@@ -1,13 +1,11 @@
 import os
 import zipfile
 import matplotlib.pyplot as plt
-from collections import Counter
 import requests
 from io import BytesIO
 import argparse
 import numpy as np
-
-IMAGE_FOLDER = "images"
+from lib.images import analyze, IMAGE_FOLDER, IMAGE_URL
 
 
 def download_and_extract_zip(url, extract_to='.'):
@@ -21,27 +19,6 @@ def download_and_extract_zip(url, extract_to='.'):
     print("Download and extraction complete.")
 
 
-def analyze_images(directory):
-    """
-    Analyze images in the directory and
-    return a dictionary of counts per plant type.
-    """
-    plant_counts = Counter()
-
-    # Traverse through the directory and
-    # count the number of images in each subdirectory
-    for root, dirs, files in os.walk(IMAGE_FOLDER):
-        for dirname in dirs:
-            if not dirname.lower().startswith(directory.lower()):
-                continue
-            dir_path = os.path.join(root, dirname)
-            num_images = len([
-                file for file in os.listdir(dir_path) if file.lower().endswith(
-                    ('.png', '.jpg', '.jpeg')
-                )
-            ])
-            plant_counts[dirname] = num_images
-    return plant_counts
 
 
 def plot_pie_chart_and_bar_chart(data, title):
@@ -83,26 +60,27 @@ def plot_pie_chart_and_bar_chart(data, title):
     print(f'Combined chart saved as {title}_combined_chart.png ✨')
 
 
-def main(directory, url):
+def main(directories):
     """
     Main function to process images and create charts.
     """
 
-    # Ensure the directory exists
+    # Ensure the directories exists
     if not os.path.exists(IMAGE_FOLDER):
-        download_and_extract_zip(url, './')
+        download_and_extract_zip(IMAGE_URL, './')
     else:
-        print("Directory already exists, skip downloading...")
+        print("directories already exists, skip downloading...")
 
     # Analyze images
-    plant_counts = analyze_images(directory)
+    for directory in directories:
+        plant_counts = analyze(directory)
 
-    if not plant_counts:
-        print(f"No class found in the '{directory}' directory.")
-        return
+        if not plant_counts:
+            print(f"No class found in the '{directory}' directories.")
+            return
 
-    # Generate charts
-    plot_pie_chart_and_bar_chart(plant_counts, os.path.basename(directory))
+        # Generate charts
+        plot_pie_chart_and_bar_chart(plant_counts, os.path.basename(directory))
 
 
 if __name__ == "__main__":
@@ -110,17 +88,17 @@ if __name__ == "__main__":
         description="A program to analyze plant images and generate charts."
     )
 
-    # Adding argument for the directory
+    # Adding argument for the directories
     parser.add_argument(
-        'directory',
+        'directories',
         type=str,
-        help='The directory to store extracted images and save the charts \
-        (ex: 01.Distribution Apple, Grape)'
+        help='The directories to store extracted images and save the charts \
+        (ex: 01.Distribution apple)',
+        nargs='+',
     )
 
     # Parsing the arguments
     args = parser.parse_args()
 
-    # URL of the ZIP file containing images
-    url = "https://cdn.intra.42.fr/document/document/17547/leaves.zip"
-    main(args.directory, url)
+    # URL of the ZIP file containing images    
+    main(args.directories)
