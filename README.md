@@ -8,6 +8,9 @@ python 01.Distribution.py apple grape
 
 # Augment unbalanced image dataset
 python 02.Augmentation.py
+
+# Save transformed image plot 
+python 03.Transformation.py [path_to_image]
 ```
 
 ## Resources
