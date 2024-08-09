@@ -2,8 +2,8 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from plantcv import plantcv as pcv
-import matplotlib
-matplotlib.use('Agg')  # Use 'Agg' backend for non-GUI environments
+# import matplotlib
+# matplotlib.use('Agg')  # Use 'Agg' backend for non-GUI environments
 import sys
 import os
 
@@ -98,7 +98,8 @@ def transform_one_image(image, filepath):
     image_num = filename.split('(')[-1].split(')')[0]
 
     plt.tight_layout()
-    plt.savefig(f"{dir_name}_{image_num}.png")
+    plt.show()
+    # plt.savefig(f"{dir_name}_{image_num}.png")
 
 def main():
     if len(sys.argv) != 2:

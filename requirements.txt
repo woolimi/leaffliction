@@ -5,3 +5,5 @@ argparse
 numpy
 torch
 torchvision
+opencv-python
+plantcv
