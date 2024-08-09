@@ -1,3 +1,4 @@
+import argparse
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -6,19 +7,6 @@ from plantcv import plantcv as pcv
 # matplotlib.use('Agg')  # Use 'Agg' backend for non-GUI environments
 import sys
 import os
-
-def plot_image(image):
-    fig, axes = plt.subplots(2, 3, figsize=(18, 12))
-    # Original
-    # Gaussian Blur
-    
-    # Mask
-    
-    # Roi Objects
-    
-    # Analyze Objects
-
-    # Pseudolandmark
 
 def rgb2gray_lab(image, channel: int, thresh: float, type: int):
     lab_image = cv2.cvtColor(image, cv2.COLOR_RGB2LAB)
@@ -101,13 +89,28 @@ def transform_one_image(image, filepath):
     plt.show()
     # plt.savefig(f"{dir_name}_{image_num}.png")
 
-def main():
-    if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} [path_to_image]")
-    elif len(sys.argv) == 2:
-        image = cv2.imread(sys.argv[1])
-        # print(sys.argv[1])
-        transform_one_image(image, sys.argv[1])
+def main(file_path):
+    try:
+        if (file_path):
+            image = cv2.imread(sys.argv[1])
+            # print(sys.argv[1])
+            transform_one_image(image, sys.argv[1])
+        else:
+            print(f"Usage: {sys.argv[0]} [path_to_image]")
+    except Exception as e:
+        print(e)
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(
+        description="A program to display image transformation."
+    )
+
+    parser.add_argument(
+        "file_path",
+        type=str,
+        nargs="?",
+        help="Image file path."
+    )
+
+    args = parser.parse_args()
+    main(args.file_path)
