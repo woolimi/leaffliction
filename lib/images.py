@@ -16,11 +16,15 @@ def analyze(directory):
 
     # Traverse through the directory and
     # count the number of images in each subdirectory
+    base = os.path.abspath(os.getcwd())
+
     for root, dirs, files in os.walk(IMAGE_FOLDER):
+        directory = os.path.normpath(os.path.join(base, root, directory))
         for dirname in dirs:
+            dirname = os.path.normpath(os.path.join(base, root, dirname))
             if not dirname.lower().startswith(directory.lower()):
                 continue
-            dir_path = os.path.join(root, dirname)
+            dir_path = os.path.join(base, root, dirname)
             num_images = len([
                 file for file in os.listdir(dir_path) if file.lower().endswith(
                     ('.png', '.jpg', '.jpeg')

@@ -9,3 +9,4 @@ opencv-python
 plantcv==3.14.3
 plotnine==0.8.0
 mizani==0.7.3
+tqdm
