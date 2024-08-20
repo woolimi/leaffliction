@@ -2,7 +2,7 @@ flake8
 matplotlib
 requests
 argparse
-numpy==1.26.0
+numpy==1.22.0
 torch
 torchvision
 opencv-python
