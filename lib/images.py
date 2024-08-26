@@ -98,3 +98,4 @@ def saturation(img, file_path):
 
     transforms = v2.Compose([v2.ColorJitter(saturation=(0.5, 3)), v2.ToDtype(torch.float32, scale=True),])
     _transform_and_save(img, file_path, transforms, 'Saturation')
+

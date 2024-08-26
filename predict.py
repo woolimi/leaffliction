@@ -1,21 +1,55 @@
 import torch
 import sys
 import argparse
+import cv2
+import matplotlib.pyplot as plt
 
 from PIL import Image
 from torchvision import transforms
 from model import LeafClassifier, class_to_idx
+from lib.transformation import Transformation
+from PIL import Image
+import os 
+
+
+def get_class_name(file_path: str):
+    parent_folder_path = os.path.dirname(file_path)
+    parent_folder_name = os.path.basename(parent_folder_path)
+    return parent_folder_name
+
+
+def plot_result(img1: Image, img2: Image, original: str, predicted: str):
+    fig, axarr = plt.subplots(1, 2, figsize=(10, 5))
+    
+    axarr[0].imshow(img1)
+    axarr[0].axis('off') 
+
+    axarr[1].imshow(img2)
+    axarr[1].axis('off')
+
+    fig.patch.set_facecolor('black')
+    fig.text(0.5, 0.12, "=== DL Classification ===", ha='center', fontsize=16, fontweight='bold', color='white')
+    is_correct = original.lower() == predicted.lower()
+    fig.text(0.5, 0.05, f"Class predicted {'OK' if is_correct else 'KO'}: {predicted}", ha='center', fontsize=12, color='green' if is_correct else 'red')
+    plt.subplots_adjust(bottom=0.2)
+    plt.show()
+    fig.savefig('predicted.png', bbox_inches='tight')
+
 
 def predict(file_path):
-    test_image = Image.open(file_path)
-    test_image = transform(test_image)
+    original_image = Image.open(file_path)
+    test_image = transform(original_image)
     test_image = test_image.unsqueeze(0)
 
     with torch.no_grad():
         output = model(test_image)
         _, predicted = torch.max(output, 1)
 
-    print(f"Class predicted: {idx2class[predicted.item()]}")
+    predicted_label = idx2class[predicted.item()]
+    original_label = get_class_name(file_path)
+    masked_image = Transformation(cv2.imread(file_path)).transform_mask()
+    plot_result(original_image, Image.fromarray(masked_image), original_label, predicted_label)
+
 
 def main(file_path):
     try:
