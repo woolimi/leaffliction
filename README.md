@@ -16,7 +16,7 @@ python 03.Transformation.py [path_to_image]
 ## Todo
 
 - [ ] Signature.txt (model, images)
-- [ ] flake8 norminette
+- [x] flake8 norminette
 - [x] modify predict (delete KO)
 - [ ] Transformation show images
 
