@@ -19,8 +19,6 @@ def download_and_extract_zip(url, extract_to='.'):
     print("Download and extraction complete.")
 
 
-
-
 def plot_pie_chart_and_bar_chart(data, title):
     """
     Plot a pie chart and a bar chart side by side
@@ -97,8 +95,5 @@ if __name__ == "__main__":
         nargs='+',
     )
 
-    # Parsing the arguments
     args = parser.parse_args()
-
-    # URL of the ZIP file containing images    
     main(args.directories)

@@ -7,6 +7,7 @@ from torchvision.transforms import v2
 IMAGE_FOLDER = 'images'
 IMAGE_URL = 'https://cdn.intra.42.fr/document/document/17547/leaves.zip'
 
+
 def analyze(directory):
     """
     Analyze images in the directory and
@@ -49,7 +50,9 @@ def flip(img, file_path):
     """
 
     # Apply horizontal flip with probability 1 (always flip)
-    transforms = v2.Compose([v2.RandomHorizontalFlip(p=1), v2.ToDtype(torch.float32, scale=True),])
+    transforms = v2.Compose(
+        [v2.RandomHorizontalFlip(p=1), v2.ToDtype(torch.float32, scale=True)]
+    )
     _transform_and_save(img, file_path, transforms, 'Flip')
 
 
@@ -59,7 +62,9 @@ def rotate(img, file_path):
     """
 
     # Apply rotation with range (45, 180)
-    transforms = v2.Compose([v2.RandomRotation((10, 180)), v2.ToDtype(torch.float32, scale=True),])
+    transforms = v2.Compose(
+        [v2.RandomRotation((10, 180)), v2.ToDtype(torch.float32, scale=True)]
+    )
     _transform_and_save(img, file_path, transforms, 'Rotate')
 
 
@@ -69,7 +74,12 @@ def perspective(img, file_path):
     """
 
     # Apply random perspective
-    transforms = v2.Compose([v2.RandomPerspective(distortion_scale=0.6, p=1.0), v2.ToDtype(torch.float32, scale=True),])
+    transforms = v2.Compose(
+        [
+            v2.RandomPerspective(distortion_scale=0.6, p=1.0),
+            v2.ToDtype(torch.float32, scale=True)
+        ]
+    )
     _transform_and_save(img, file_path, transforms, 'Perspective')
 
 
@@ -78,7 +88,12 @@ def brightness(img, file_path):
     Brightness
     """
 
-    transforms = v2.Compose([v2.ColorJitter(brightness=(0.5, 1.5)), v2.ToDtype(torch.float32, scale=True),])
+    transforms = v2.Compose(
+        [
+            v2.ColorJitter(brightness=(0.5, 1.5)),
+            v2.ToDtype(torch.float32, scale=True)
+        ]
+    )
     _transform_and_save(img, file_path, transforms, 'Brightness')
 
 
@@ -87,7 +102,12 @@ def contrast(img, file_path):
     Contrast
     """
 
-    transforms = v2.Compose([v2.ColorJitter(contrast=(0.5, 3)), v2.ToDtype(torch.float32, scale=True),])
+    transforms = v2.Compose(
+        [
+            v2.ColorJitter(contrast=(0.5, 3)),
+            v2.ToDtype(torch.float32, scale=True)
+        ]
+    )
     _transform_and_save(img, file_path, transforms, 'Contrast')
 
 
@@ -96,6 +116,10 @@ def saturation(img, file_path):
     Saturation
     """
 
-    transforms = v2.Compose([v2.ColorJitter(saturation=(0.5, 3)), v2.ToDtype(torch.float32, scale=True),])
+    transforms = v2.Compose(
+        [
+            v2.ColorJitter(saturation=(0.5, 3)),
+            v2.ToDtype(torch.float32, scale=True)
+        ]
+    )
     _transform_and_save(img, file_path, transforms, 'Saturation')
-

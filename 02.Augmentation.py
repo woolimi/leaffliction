@@ -1,9 +1,11 @@
 import argparse
 import os
 from torchvision.io import read_image
-from lib.images import analyze, flip, rotate, perspective, brightness, contrast, saturation, IMAGE_FOLDER
+from lib.images import analyze, flip, rotate, perspective
+from lib.images import brightness, contrast, saturation, IMAGE_FOLDER
 from lib.print import warning
 import random
+
 
 def print_summary(before, after):
     """
@@ -15,20 +17,20 @@ def print_summary(before, after):
     for key, value in before.items():
         print(f"{key}: {value} -> {after[key]}")
 
+
 def random_transform(img, file_path):
     """
     Random augmentation
     """
 
-    transforms = [flip , rotate, perspective, brightness, contrast, saturation]
+    transforms = [flip, rotate, perspective, brightness, contrast, saturation]
     num = random.randint(0, 5)
     transforms[num](img, file_path)
 
 
-
 def augment(category: str):
     """
-    Augment images in the directory    
+    Augment images in the directory
     """
     print(f'\nAugmenting "{category}" images...')
     counts_before = analyze(category)
@@ -54,14 +56,12 @@ def augment(category: str):
 
     counts_after = analyze(category)
     print_summary(counts_before, counts_after)
-    
-
 
 
 def main(file_path):
     try:
         if (file_path):
-            img = read_image(file_path) 
+            img = read_image(file_path)
             flip(img, file_path)
             rotate(img, file_path)
             perspective(img, file_path)
@@ -72,16 +72,14 @@ def main(file_path):
             print(warning("Auto image augmentation..."))
             augment("Apple")
             augment("Grape")
-
-
-
     except Exception as e:
         print(e)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="A program to augment images samples by applying 6 types of transformation."
+        description="A program to augment images samples\
+            by applying 6 types of transformation."
     )
 
     # Adding argument for the directory

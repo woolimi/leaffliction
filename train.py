@@ -7,6 +7,7 @@ from torch.utils.tensorboard import SummaryWriter
 from datetime import datetime
 from model import dataset, LeafClassifier
 
+
 # train one epoch
 def train_one_epoch(epoch_index, tb_writer):
     running_loss = 0.0
@@ -33,6 +34,7 @@ def train_one_epoch(epoch_index, tb_writer):
     tb_writer.add_scalar("Loss/train", last_loss, tb_x)
     return last_loss
 
+
 # per epoch activity
 def train():
     epoch_number = 0
@@ -57,14 +59,18 @@ def train():
         print(f"LOSS train {avg_loss:.4f} val {avg_vloss:.4f}")
 
         # Tensorboard
-        writer.add_scalars("Training vs. Validation Loss", 
-                        {"Training": avg_loss, "Validation": avg_vloss},
-                        epoch_number + 1)
+        writer.add_scalars(
+            "Training vs. Validation Loss",
+            {"Training": avg_loss, "Validation": avg_vloss},
+            epoch_number + 1)
         writer.flush()
 
         if avg_vloss < best_vloss:
             best_vloss = avg_vloss
-            torch.save(model.state_dict(), f"./model_{timestamp}_{epoch_number}")
+            torch.save(
+                model.state_dict(),
+                f"./model_{timestamp}_{epoch_number}"
+            )
         epoch_number += 1
 
 
@@ -85,7 +91,10 @@ if __name__ == "__main__":
     train_size = int(0.8 * len(dataset))
     val_size = len(dataset) - train_size
     gen = torch.Generator().manual_seed(42)
-    train_data, val_data = random_split(dataset, [train_size, val_size], generator=gen)
+    train_data, val_data = random_split(
+        dataset,
+        [train_size, val_size], generator=gen
+    )
 
     train_loader = DataLoader(train_data, batch_size, shuffle=True)
     val_loader = DataLoader(val_data, batch_size, shuffle=False)
@@ -94,7 +103,7 @@ if __name__ == "__main__":
     print(f"train_data: {len(train_loader)}, val_data: {len(val_loader)}")
 
     # Loss and Optimizer
-    model = LeafClassifier() 
+    model = LeafClassifier()
     model.load_state_dict(torch.load("./model_20240823_170439_4"))
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=lr)

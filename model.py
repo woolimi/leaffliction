@@ -17,8 +17,6 @@ dataset = datasets.ImageFolder(root=IMAGE_FOLDER, transform=transform)
 NUM_CLASSES = len(dataset.classes)
 class_to_idx = dataset.class_to_idx
 
-# print(f"Number of classes: {NUM_CLASSES}")
-# print(f"Class to index mapping: {class_to_idx}")
 
 # Define model
 class LeafClassifier(nn.Module):

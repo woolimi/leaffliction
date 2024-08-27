@@ -16,6 +16,7 @@ def main(file_path):
     except Exception as e:
         print(e)
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="A program to display image transformation."
