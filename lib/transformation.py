@@ -36,7 +36,10 @@ class Transformation():
         filename, file_extension = os.path.splitext(file_path)
         try:
             pcv.params.debug = "print"
-            pcv.print_image(img, f"{filename}_{transform_type}{file_extension}")
+            pcv.print_image(
+                img,
+                f"{filename}_{transform_type}{file_extension}"
+            )
             pcv.params.debug = None
         except Exception as e:
             print(e)
@@ -64,7 +67,11 @@ class Transformation():
         Roi Objects
         """
 
-        contours, _ = cv2.findContours(self.mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv2.findContours(
+            self.mask,
+            cv2.RETR_TREE,
+            cv2.CHAIN_APPROX_SIMPLE
+        )
         roi_image = self.img.copy()
         cv2.drawContours(roi_image, contours, -1, (0, 255, 0), cv2.FILLED)
         return roi_image
@@ -75,7 +82,11 @@ class Transformation():
         """
 
         objects, object_hierarchy = pcv.find_objects(self.img, self.mask)
-        obj, self.mask = pcv.object_composition(self.img, objects, object_hierarchy)
+        obj, self.mask = pcv.object_composition(
+            self.img,
+            objects,
+            object_hierarchy
+        )
         analyze_image = pcv.analyze_object(self.img, obj, self.mask)
         return analyze_image
 
@@ -85,9 +96,16 @@ class Transformation():
         """
 
         objects, object_hierarchy = pcv.find_objects(self.img, self.mask)
-        obj, self.mask = pcv.object_composition(self.img, objects, object_hierarchy)
+        obj, self.mask = pcv.object_composition(
+            self.img,
+            objects,
+            object_hierarchy
+        )
 
-        output_path = os.path.join(pcv.params.debug_outdir, (str(pcv.params.device) + "_y_axis_pseudolandmarks.png"))
+        output_path = os.path.join(
+            pcv.params.debug_outdir,
+            (str(pcv.params.device) + "_y_axis_pseudolandmarks.png")
+        )
         input_path = os.path.join(pcv.params.debug_outdir, "input_image.png")
 
         pcv.params.debug = "print"
@@ -107,11 +125,19 @@ class Transformation():
         Color Histogram
         """
 
-        output_path = os.path.join(pcv.params.debug_outdir, (str(pcv.params.device) + "_analyze_color_hist.png"))
+        output_path = os.path.join(
+            pcv.params.debug_outdir,
+            (str(pcv.params.device) + "_analyze_color_hist.png")
+        )
         input_path = os.path.join(pcv.params.debug_outdir, "input_image.png")
 
         pcv.params.debug = None
-        color_channels = pcv.analyze_color(self.img, mask=self.mask, colorspaces="all", label="plant")
+        color_channels = pcv.analyze_color(
+            self.img,
+            mask=self.mask,
+            colorspaces="all",
+            label="plant"
+        )
         pcv.print_image(color_channels, output_path)
         img = pcv.readimage(output_path)
         # print(output_path)
@@ -129,7 +155,7 @@ class Transformation():
         axes[0, 0].set_title("Original Image")
 
         # Gaussian Blur
-        gaussian_blur_img = self.transform_gaussian_blur() 
+        gaussian_blur_img = self.transform_gaussian_blur()
         axes[0, 1].imshow(cv2.cvtColor(gaussian_blur_img, cv2.COLOR_RGB2BGR))
         axes[0, 1].set_title("Gaussian Blur")
 
@@ -164,6 +190,16 @@ class Transformation():
         plt.show()
 
     def transform_one_image(self, file_path):
-        transforms = [self.transform_gaussian_blur, self.transform_mask, self.transform_roi_objects, self.transform_analyze_object, self.transform_pseudolandmarks]
+        transforms = [
+            self.transform_gaussian_blur,
+            self.transform_mask,
+            self.transform_roi_objects,
+            self.transform_analyze_object,
+            self.transform_pseudolandmarks
+        ]
         for transform in transforms:
-            self._transform_and_save(file_path, transform, transform.__name__[10:])
+            self._transform_and_save(
+                file_path,
+                transform,
+                transform.__name__[10:]
+            )
