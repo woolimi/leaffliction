@@ -9,9 +9,16 @@ python 01.Distribution.py apple grape
 # Augment unbalanced image dataset
 python 02.Augmentation.py
 
-# Save transformed image plot 
+# Save transformed image plot
 python 03.Transformation.py [path_to_image]
 ```
+
+## Todo
+
+- [ ] Signature.txt (model, images)
+- [ ] flake8 norminette
+- [ ] modify predict (delete KO)
+- [ ] Transformation show images
 
 ## Resources
 
