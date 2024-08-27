@@ -9,16 +9,9 @@ from torchvision import transforms
 from model import LeafClassifier, class_to_idx
 from lib.transformation import Transformation
 from PIL import Image
-import os 
 
 
-def get_class_name(file_path: str):
-    parent_folder_path = os.path.dirname(file_path)
-    parent_folder_name = os.path.basename(parent_folder_path)
-    return parent_folder_name
-
-
-def plot_result(img1: Image, img2: Image, original: str, predicted: str):
+def plot_result(img1: Image, img2: Image, predicted: str):
     fig, axarr = plt.subplots(1, 2, figsize=(10, 5))
     
     axarr[0].imshow(img1)
@@ -29,8 +22,7 @@ def plot_result(img1: Image, img2: Image, original: str, predicted: str):
 
     fig.patch.set_facecolor('black')
     fig.text(0.5, 0.12, "=== DL Classification ===", ha='center', fontsize=16, fontweight='bold', color='white')
-    is_correct = original.lower() == predicted.lower()
-    fig.text(0.5, 0.05, f"Class predicted {'OK' if is_correct else 'KO'}: {predicted}", ha='center', fontsize=12, color='green' if is_correct else 'red')
+    fig.text(0.5, 0.05, f"Class predicted: {predicted}", ha='center', fontsize=12, color='white')
     plt.subplots_adjust(bottom=0.2)
     plt.show()
     fig.savefig('predicted.png', bbox_inches='tight')
@@ -46,9 +38,8 @@ def predict(file_path):
         _, predicted = torch.max(output, 1)
 
     predicted_label = idx2class[predicted.item()]
-    original_label = get_class_name(file_path)
     masked_image = Transformation(cv2.imread(file_path)).transform_mask()
-    plot_result(original_image, Image.fromarray(masked_image), original_label, predicted_label)
+    plot_result(original_image, Image.fromarray(masked_image), predicted_label)
 
 
 def main(file_path):
@@ -59,6 +50,7 @@ def main(file_path):
             print(f"Usage: {sys.argv[0]} [path_to_image]")
     except Exception as e:
         print(e)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
