@@ -3,6 +3,8 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from plantcv import plantcv as pcv
+import matplotlib
+matplotlib.use('TkAgg')
 
 
 class Transformation():
@@ -31,15 +33,18 @@ class Transformation():
         _, binary_image = cv2.threshold(binary_img, thresh, 255, type)
         return binary_image
 
-    def _transform_and_save(self, file_path, transforms, transform_type):
+    def _transform_and_save(self, dst_path, transforms, transform_type):
         img = transforms()
-        filename, file_extension = os.path.splitext(file_path)
+        filename, file_extension = os.path.splitext(dst_path)
         try:
+            file_path = f"{filename}_{transform_type}{file_extension}"
+
             pcv.params.debug = "print"
             pcv.print_image(
                 img,
-                f"{filename}_{transform_type}{file_extension}"
+                file_path
             )
+            print(f"Saving image: {file_path}")
             pcv.params.debug = None
         except Exception as e:
             print(e)
@@ -189,17 +194,24 @@ class Transformation():
         plt.tight_layout()
         plt.show()
 
-    def transform_one_image(self, file_path):
-        transforms = [
-            self.transform_gaussian_blur,
-            self.transform_mask,
-            self.transform_roi_objects,
-            self.transform_analyze_object,
-            self.transform_pseudolandmarks
-        ]
+    def transform_one_image(self, dst_path, transform_lst):
+        transform_dict = {
+            "gaussian_blur": self.transform_gaussian_blur,
+            "mask": self.transform_mask,
+            "roi_objects": self.transform_roi_objects,
+            "analyze_object": self.transform_analyze_object,
+            "pseudolandmarks": self.transform_pseudolandmarks,
+            "color_histogram": self.transform_color_histogram
+
+        }
+        if len(transform_lst) != 0:
+            transforms = [val for key, val in transform_dict.items()
+                          if key in transform_lst]
+        else:
+            transforms = [val for val in transform_dict.values()]
         for transform in transforms:
             self._transform_and_save(
-                file_path,
+                dst_path,
                 transform,
                 transform.__name__[10:]
             )
