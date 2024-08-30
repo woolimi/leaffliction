@@ -9,7 +9,7 @@ from model import dataset, LeafClassifier
 
 
 # train one epoch
-def train_one_epoch(epoch_index, tb_writer):
+def train_one_epoch(epoch_index: int, tb_writer) -> float:
     running_loss = 0.0
     last_loss = 0.0
 
@@ -36,7 +36,7 @@ def train_one_epoch(epoch_index, tb_writer):
 
 
 # per epoch activity
-def train():
+def train() -> None:
     epoch_number = 0
     best_vloss = 1_000_000.
     print(f"\nStart training model - epochs:{epochs}")

@@ -3,12 +3,13 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from plantcv import plantcv as pcv
+from typing import List
 import matplotlib
 matplotlib.use('TkAgg')
 
 
 class Transformation():
-    def __init__(self, img):
+    def __init__(self, img: np.ndarray):
         self.img = img
         self._create_mask()
 
@@ -21,19 +22,28 @@ class Transformation():
         self.mask = cv2.inRange(hsv_image, lower_bound, upper_bound)
         return self.mask
 
-    def _grayscale_lab(self, channel: int, thresh: float, type: int):
+    def _grayscale_lab(self,
+                       channel: int,
+                       thresh: float,
+                       img_type: int) -> np.ndarray:
         lab_image = cv2.cvtColor(self.img, cv2.COLOR_RGB2LAB)
         binary_img = lab_image[:, :, channel]
-        _, binary_image = cv2.threshold(binary_img, thresh, 255, type)
+        _, binary_image = cv2.threshold(binary_img, thresh, 255, img_type)
         return binary_image
 
-    def _grayscale_hsv(self, channel: int, thresh: float, type: int):
+    def _grayscale_hsv(self,
+                       channel: int,
+                       thresh: float,
+                       img_type: int) -> np.ndarray:
         hsv_image = cv2.cvtColor(self.img, cv2.COLOR_RGB2HSV)
         binary_img = hsv_image[:, :, channel]
-        _, binary_image = cv2.threshold(binary_img, thresh, 255, type)
+        _, binary_image = cv2.threshold(binary_img, thresh, 255, img_type)
         return binary_image
 
-    def _transform_and_save(self, dst_path, transforms, transform_type):
+    def _transform_and_save(self,
+                            dst_path: str,
+                            transforms: callable,
+                            transform_type: str) -> None:
         img = transforms()
         filename, file_extension = os.path.splitext(dst_path)
         try:
@@ -49,27 +59,27 @@ class Transformation():
         except Exception as e:
             print(e)
 
-    def transform_gaussian_blur(self):
+    def transform_gaussian_blur(self) -> np.ndarray:
         """
-        Gaussian Blur
+        Gaussian Blur transformation
         """
 
         binary_image = self._grayscale_hsv(1, 58, cv2.THRESH_BINARY)
         gaussian_blur_img = cv2.GaussianBlur(binary_image, (5, 5), 0)
         return gaussian_blur_img
 
-    def transform_mask(self):
+    def transform_mask(self) -> np.ndarray:
         """
-        Mask
+        Mask transformation
         """
 
         result = cv2.bitwise_and(self.img, self.img, mask=self.mask)
         result[self.mask == 0] = [255, 255, 255]
         return result
 
-    def transform_roi_objects(self):
+    def transform_roi_objects(self) -> np.ndarray:
         """
-        Roi Objects
+        Roi Objects transformation
         """
 
         contours, _ = cv2.findContours(
@@ -81,9 +91,9 @@ class Transformation():
         cv2.drawContours(roi_image, contours, -1, (0, 255, 0), cv2.FILLED)
         return roi_image
 
-    def transform_analyze_object(self):
+    def transform_analyze_object(self) -> np.ndarray:
         """
-        Anaylze Object
+        Anaylze Object transformation
         """
 
         objects, object_hierarchy = pcv.find_objects(self.img, self.mask)
@@ -95,9 +105,9 @@ class Transformation():
         analyze_image = pcv.analyze_object(self.img, obj, self.mask)
         return analyze_image
 
-    def transform_pseudolandmarks(self):
+    def transform_pseudolandmarks(self) -> np.ndarray:
         """
-        Pseudolandmarks
+        Pseudolandmarks transformation
         """
 
         objects, object_hierarchy = pcv.find_objects(self.img, self.mask)
@@ -125,9 +135,9 @@ class Transformation():
             os.remove(output_path)
         return img[0]
 
-    def transform_color_histogram(self):
+    def transform_color_histogram(self) -> np.ndarray:
         """
-        Color Histogram
+        Color Histogram transformation
         """
 
         output_path = os.path.join(
@@ -145,7 +155,6 @@ class Transformation():
         )
         pcv.print_image(color_channels, output_path)
         img = pcv.readimage(output_path)
-        # print(output_path)
 
         if os.path.exists(input_path) and os.path.isfile(input_path):
             os.remove(input_path)
@@ -153,7 +162,10 @@ class Transformation():
             os.remove(output_path)
         return img[0]
 
-    def plot_transformation_image(self):
+    def plot_transformation_image(self) -> None:
+        """
+        Method that displays 6 transformation images
+        """
         fig, axes = plt.subplots(3, 2, figsize=(18, 12))
         # Original
         axes[0, 0].imshow(cv2.cvtColor(self.img, cv2.COLOR_RGB2BGR))
@@ -194,7 +206,13 @@ class Transformation():
         plt.tight_layout()
         plt.show()
 
-    def transform_one_image(self, dst_path, transform_lst):
+    def transform_one_image(self,
+                            dst_path: str,
+                            transform_lst: List[str]) -> None:
+        """
+        Method that transforms one image with specified flags
+        and save output images designated destination path.
+        """
         transform_dict = {
             "gaussian_blur": self.transform_gaussian_blur,
             "mask": self.transform_mask,

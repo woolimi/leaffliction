@@ -24,7 +24,7 @@ def transform(args) -> None:
         Transformer.transform_one_image(image_dst_path, transforms)
 
 
-def main(args):
+def main(args) -> None:
     try:
         if (args.src_path):
             if os.path.isdir(args.src_path):

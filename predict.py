@@ -10,7 +10,7 @@ from model import LeafClassifier, class_to_idx
 from lib.transformation import Transformation
 
 
-def plot_result(img1: Image, img2: Image, predicted: str):
+def plot_result(img1: Image, img2: Image, predicted: str) -> None:
     fig, axarr = plt.subplots(1, 2, figsize=(10, 5))
 
     axarr[0].imshow(img1)
@@ -35,7 +35,7 @@ def plot_result(img1: Image, img2: Image, predicted: str):
     fig.savefig('predicted.png', bbox_inches='tight')
 
 
-def predict(file_path):
+def predict(file_path: str) -> None:
     original_image = Image.open(file_path)
     test_image = transform(original_image)
     test_image = test_image.unsqueeze(0)
@@ -49,7 +49,7 @@ def predict(file_path):
     plot_result(original_image, Image.fromarray(masked_image), predicted_label)
 
 
-def main(file_path):
+def main(file_path: str) -> None:
     try:
         if (file_path):
             predict(sys.argv[1])

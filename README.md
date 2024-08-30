@@ -10,7 +10,7 @@ python 01.Distribution.py apple grape
 python 02.Augmentation.py
 
 # Save transformed image plot
-python 03.Transformation.py [path_to_image]
+python 03.Transformation.py -src [SRC_PATH] -dst [DST_PATH]
 ```
 
 ## Todo
