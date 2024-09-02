@@ -16,27 +16,20 @@ class Transformation():
     def _create_mask(self):
         hsv_image = cv2.cvtColor(self.img, cv2.COLOR_BGR2HSV)
 
+        # Each value corresponds to HSV
         lower_bound = np.array([35, 40, 40])
         upper_bound = np.array([85, 255, 255])
 
         self.mask = cv2.inRange(hsv_image, lower_bound, upper_bound)
         return self.mask
 
-    def _grayscale_lab(self,
-                       channel: int,
-                       thresh: float,
-                       img_type: int) -> np.ndarray:
-        lab_image = cv2.cvtColor(self.img, cv2.COLOR_RGB2LAB)
-        binary_img = lab_image[:, :, channel]
-        _, binary_image = cv2.threshold(binary_img, thresh, 255, img_type)
-        return binary_image
-
-    def _grayscale_hsv(self,
-                       channel: int,
-                       thresh: float,
-                       img_type: int) -> np.ndarray:
-        hsv_image = cv2.cvtColor(self.img, cv2.COLOR_RGB2HSV)
-        binary_img = hsv_image[:, :, channel]
+    def _grayscale(self,
+                   color_model: int,
+                   channel: int,
+                   thresh: float,
+                   img_type: int) -> np.ndarray:
+        cvt_image = cv2.cvtColor(self.img, color_model)
+        binary_img = cvt_image[:, :, channel]
         _, binary_image = cv2.threshold(binary_img, thresh, 255, img_type)
         return binary_image
 
@@ -64,7 +57,10 @@ class Transformation():
         Gaussian Blur transformation
         """
 
-        binary_image = self._grayscale_hsv(1, 58, cv2.THRESH_BINARY)
+        binary_image = self._grayscale(cv2.COLOR_BGR2HSV,
+                                       channel=1,
+                                       thresh=58,
+                                       img_type=cv2.THRESH_BINARY)
         gaussian_blur_img = cv2.GaussianBlur(binary_image, (5, 5), 0)
         return gaussian_blur_img
 
@@ -74,6 +70,7 @@ class Transformation():
         """
 
         result = cv2.bitwise_and(self.img, self.img, mask=self.mask)
+        # Set background color to white
         result[self.mask == 0] = [255, 255, 255]
         return result
 
@@ -128,7 +125,6 @@ class Transformation():
         pcv.params.debug = None
         img = pcv.readimage(output_path)
 
-        # print(img[0].shape)
         if os.path.exists(input_path) and os.path.isfile(input_path):
             os.remove(input_path)
         if os.path.exists(output_path) and os.path.isfile(output_path):
@@ -211,7 +207,7 @@ class Transformation():
                             transform_lst: List[str]) -> None:
         """
         Method that transforms one image with specified flags
-        and save output images designated destination path.
+        and saves output images to designated destination path.
         """
         transform_dict = {
             "gaussian_blur": self.transform_gaussian_blur,
