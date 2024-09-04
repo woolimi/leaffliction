@@ -36,20 +36,21 @@ def augment(category: str):
     counts_before = analyze(category)
     counts_after = counts_before.copy()
     max_num = max(counts_after.values())
+    base = os.path.abspath(os.getcwd())
 
     root, dirs, files = next(os.walk(IMAGE_FOLDER))
     for dirname in dirs:
         if not dirname.lower().startswith(category.lower()):
             continue
-        dir_path = os.path.join(root, dirname)
+        dir_path = os.path.join(base, root, dirname)
 
-        while (counts_after[dirname] < max_num):
+        while (counts_after[dir_path] < max_num):
             for file in os.listdir(dir_path):
                 file_path = os.path.join(dir_path, file)
                 img = read_image(file_path)
                 random_transform(img, file_path)
-                counts_after[dirname] += 1
-                if (counts_after[dirname] == max_num):
+                counts_after[dir_path] += 1
+                if (counts_after[dir_path] == max_num):
                     break
             # Reset the number of images with real number of files.
             counts_after = analyze(category)
