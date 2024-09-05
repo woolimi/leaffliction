@@ -13,12 +13,11 @@ python 02.Augmentation.py
 python 03.Transformation.py -src [SRC_PATH] -dst [DST_PATH]
 ```
 
-## Todo
+## Tensorboard
 
-- [ ] Signature.txt (model, images)
-- [x] flake8 norminette
-- [x] modify predict (delete KO)
-- [x] Transformation show images
+```bash
+tensorboard --logdir runs 
+```
 
 ## Resources
 
