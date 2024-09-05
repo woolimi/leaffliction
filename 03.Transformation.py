@@ -28,11 +28,11 @@ def main(args) -> None:
     try:
         if (args.src_path):
             if os.path.isdir(args.src_path):
-                if os.path.isdir(args.dst_path):
+                if args.dst_path is not None and os.path.isdir(args.dst_path):
                     transform(args)
                 else:
-                    print(f"Usage: {sys.argv[0]} \
-                          -src [SRC_PATH] -dst [DST_PATH]")
+                    msg = f"{sys.argv[0]} -src [SRC_PATH] -dst [DST_PATH]"
+                    print(f"Usage: {msg}")
             else:
                 image = cv2.imread(args.src_path)
                 Transformer = Transformation(image)

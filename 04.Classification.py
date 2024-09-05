@@ -57,9 +57,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     model = LeafClassifier()
-    model.load_state_dict(
-        torch.load("./model_20240823_170439_4", weights_only=True)
-    )
+    try:
+        model.load_state_dict(
+            torch.load("./model_20240823_170439_4", weights_only=True)
+        )
+    except Exception as e:
+        print(e)
+
     model.eval()
 
     transform = transforms.Compose([

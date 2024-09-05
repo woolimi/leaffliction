@@ -40,7 +40,8 @@ def plot_pie_chart_and_bar_chart(data, title):
     axs[0].axis('equal')
 
     # Bar chart
-    axs[1].bar(list(map(lambda path: os.path.basename(path), data.keys())), data.values(), color=colors)
+    axs[1].bar(list(map(lambda path: os.path.basename(path), data.keys())),
+               data.values(), color=colors)
     axs[1].tick_params(axis='x', labelright=False)
     axs[1].set_axisbelow(True)
     axs[1].grid(axis='y', linestyle='--', alpha=0.7)

@@ -104,7 +104,12 @@ if __name__ == "__main__":
 
     # Loss and Optimizer
     model = LeafClassifier()
-    model.load_state_dict(torch.load("./model_20240823_170439_4"))
+    try:
+        model.load_state_dict(
+            torch.load("./model_20240823_170439_4", weights_only=True)
+        )
+    except Exception as e:
+        print(e)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=lr)
 
