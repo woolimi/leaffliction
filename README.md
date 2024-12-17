@@ -40,7 +40,7 @@ Summary of augmentation:
 /Users/woolim/Documents/leaffliction/images/Grape_spot: 1075 -> 1382
 ```
 
-# Check image distributions are well balanced
+### Check image distributions are well balanced
 
 ```bash
 python 01.Distribution.py apple grape
@@ -54,7 +54,7 @@ python 01.Distribution.py apple grape
 | :--------------------------------: | :----------------------------: |
 | ![](./demo/grape_non_balanced.png) | ![](./demo/grape_balanced.png) |
 
-# Save transformed image plot
+### Save transformed image plot
 
 ```bash
 python 03.Transformation.py -src [SRC_PATH] -dst [DST_PATH]
@@ -64,7 +64,7 @@ python 03.Transformation.py -src [SRC_PATH] -dst [DST_PATH]
 | :------------------------------------: | :------------------------------------: |
 | ![](./demo/image_transformation_1.png) | ![](./demo/image_transformation_2.png) |
 
-# Predict an image
+### Predict an image
 
 ```bash
 python predict.py [image_path]
@@ -72,7 +72,7 @@ python predict.py [image_path]
 
 ![](./demo/predicted.png)
 
-# Predict all images and check prediction accuracy.
+### Predict all images and check prediction accuracy.
 
 ```bash
 python 04.Classification.py
